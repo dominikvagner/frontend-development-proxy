@@ -1,0 +1,26 @@
+{
+	order rewrite last
+	order rh_identity_transform before respond
+	admin off
+}
+
+{$HCC_ENV}.foo.redhat.com:{$PROXY_PORT} {
+	log {
+		output stdout
+		format console
+		level DEBUG
+	}
+
+	{$LOCAL_ROUTES}
+
+	handle {
+		reverse_proxy {$HCC_ENV_URL} {
+			header_up Host {http.reverse_proxy.upstream.hostport}
+			header_up Accept-Encoding "gzip;q=0,deflate,sdch"
+		}
+	}
+
+	tls internal {
+		on_demand
+	}
+}
