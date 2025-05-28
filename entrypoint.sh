@@ -1,7 +1,17 @@
 #!/bin/bash
 
 output=$(
-  cat "$ROUTES_JSON_PATH" | jq -r 'to_entries[] | [.key, .value.url, (.value."rh-identity-headers" // false)] | @tsv' |
+  cat "$ROUTES_JSON_PATH" | jq -r 'to_entries[] | [.key, .value.url, (
+    if .key | startswith("/api/") then
+        if .value."rh-identity-headers" == false then
+            false
+        else
+            true
+        end
+    else
+        .value."rh-identity-headers" // false
+    end
+)] | @tsv' |
     while IFS=$'\t' read -r path url rh_identity; do
       printf "\thandle %s {\n" "$path"
       printf "\t\treverse_proxy %s {\n" "$url"

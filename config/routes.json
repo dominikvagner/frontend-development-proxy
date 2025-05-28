@@ -1,4 +1,4 @@
 {
-  "/apps/NAME-OF-YOUR-APP*": { "url": "http://127.0.0.1:8003" },
-  "/api/NAME-OF-YOUR-APP/*": { "url": "http://127.0.0.1:8000", "rh-identity-headers": true }
+  "/apps/NAME-OF-YOUR-APP*": { "url": "http://host.docker.internal:8003" },
+  "/api/NAME-OF-YOUR-APP/*": { "url": "http://host.docker.internal:8000" }
 }
