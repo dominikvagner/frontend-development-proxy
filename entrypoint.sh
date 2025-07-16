@@ -16,6 +16,7 @@ output=$(
       printf "\thandle %s {\n" "$path"
       printf "\t\treverse_proxy %s {\n" "$url"
       printf "\t\t\theader_up Host {http.reverse_proxy.upstream.hostport}\n"
+      printf '\t\t\theader_up Cache-Control "no-cache, no-store, must-revalidate"\n'
       printf "\t\t}\n"
       if [ "$rh_identity" = "true" ]; then
         printf "\n\t\trh_identity_transform\n"
