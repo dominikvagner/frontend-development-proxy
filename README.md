@@ -1,6 +1,6 @@
-# Consoledot Testing Proxy
+# Frontend Development Proxy
 
-[![Static Badge](https://img.shields.io/badge/quay.io-dvagner%2Fconsoledot--testing--proxy-red)](https://quay.io/repository/dvagner/consoledot-testing-proxy)
+<!-- [![Static Badge](https://img.shields.io/badge/quay.io-dvagner%2Fconsoledot--testing--proxy-red)](https://quay.io/repository/dvagner/consoledot-testing-proxy) -->
 
 Configurable container proxy for UI/E2E testing, implemented using the
 [caddy](https://caddyserver.com/) proxy extended with a custom header transforming
@@ -17,6 +17,7 @@ Usage (testing against stage):
 ```sh
 podman run -d
   -e HTTPS_PROXY=$RH_STAGE_PROXY_URL
+  -p 1337:1337
   -v "$(pwd)/config:/config:ro,Z"
   consoledot-testing-proxy quay.io/dvagner/consoledot-testing-proxy
 ```
@@ -68,6 +69,35 @@ Example:
   // YOUR BACKEND API
   "/api/NAME-OF-YOUR-APP/*": { "url": "http://host.docker.internal:8000" },
 }
+```
+
+#### Using a locally running Chrome UI
+
+For development with locally running Chrome UI
+([insights-chrome](https://github.com/RedHatInsights/insights-chrome)) you need
+to add a new route into the routes config that points to a server which serves
+the chrome UI static files under the correct route and that has the `is_chrome`
+flag set.
+
+```jsonc
+{
+  "/apps/chrome*": {
+    "url": "http://host.docker.internal:9912",
+    "is_chrome": true, // this will enable the HTML fallback handle needed by the chrome UI
+  },
+}
+```
+
+You can start a server which will serve the chrome static files like so:
+
+```sh
+❯ npx http-server ./build -p 9912 -c-1 -a :: --cors=\*
+
+# Beware that the build folder needs to have the static file in the
+# `build/apps/chrome/` directory.
+❯ ls build/apps/chrome/
+.  ..  index.html  js
+
 ```
 
 ### Environment
