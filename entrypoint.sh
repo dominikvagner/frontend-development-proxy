@@ -11,8 +11,18 @@ output=$(
     else
         .value."rh-identity-headers" // false
     end
-)] | @tsv' |
-    while IFS=$'\t' read -r path url rh_identity; do
+), .value."is_chrome"] | @tsv' |
+    while IFS=$'\t' read -r path url rh_identity is_chrome; do
+      if [ "$is_chrome" = "true" ]; then
+        printf "\thandle @html_fallback {\n"
+        printf "\t\trewrite * /apps/chrome/index.html\n"
+        printf "\t\treverse_proxy %s {\n" "$url"
+        printf "\t\t\theader_up Host {http.reverse_proxy.upstream.hostport}\n"
+        printf '\t\t\theader_up Cache-Control "no-cache, no-store, must-revalidate"\n'
+        printf "\t\t}\n"
+        printf "\t}\n\n"
+      fi
+
       printf "\thandle %s {\n" "$path"
       printf "\t\treverse_proxy %s {\n" "$url"
       printf "\t\t\theader_up Host {http.reverse_proxy.upstream.hostport}\n"

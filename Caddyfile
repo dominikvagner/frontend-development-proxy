@@ -1,5 +1,5 @@
 {
-	order rewrite last
+	order rewrite before reverse_proxy
 	order rh_identity_transform before respond
 	cache
 	admin off
@@ -10,6 +10,11 @@
 		output stdout
 		format console
 		level DEBUG
+	}
+
+	@html_fallback {
+		header Accept *text/html*
+		not path_regexp .*\/(silent-check-sso\.html)$
 	}
 
 	{$LOCAL_ROUTES}
