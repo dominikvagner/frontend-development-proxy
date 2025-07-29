@@ -19,7 +19,7 @@ podman run -d
   -e HTTPS_PROXY=$RH_STAGE_PROXY_URL
   -p 1337:1337
   -v "$(pwd)/config:/config:ro,Z"
-  consoledot-testing-proxy quay.io/dvagner/consoledot-testing-proxy
+  frontend-development-proxy quay.io/redhat-user-workloads/hcc-platex-services-tenant/frontend-development-proxy:latest
 ```
 
 ## Setup
@@ -124,5 +124,5 @@ sudo podman run -d
   -e HTTPS_PROXY=$RH_STAGE_PROXY_URL
   -v "$(pwd)/config:/config:ro,Z"
   --network=host
-  consoledot-testing-proxy quay.io/dvagner/consoledot-testing-proxy
+  frontend-development-proxy quay.io/redhat-user-workloads/hcc-platex-services-tenant/frontend-development-proxy:latest
 ```
